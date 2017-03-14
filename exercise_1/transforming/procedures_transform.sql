@@ -1,21 +1,24 @@
-CREATE TABLE state_scores
-ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.OpenCSVSerde' 
-WITH SERDEPROPERTIES (
-	"separatorChar" = ",",
-	"quoteChar" = '"',
-	"escapeChar" = '\\'
-)
-AS
-	SELECT	
-		h.state AS state, 
-		COUNT(DISTINCT h.provider_id) as hosp_count,
-		AVG(s.overall_rating_of_hospital_achievement_points) AS overall_ach_points, 
-		AVG(r.score) AS readmit_score, 
-		COUNT(r.measure_id) AS readmit_count, 
-		AVG(e.score) AS effective_score, 
-		COUNT(e.score) AS effective_count 
-	FROM hospitals h
-	LEFT JOIN survey_responses s ON ( h.provider_id = s.provider_id ) 
-	LEFT JOIN readmissions r ON ( h.provider_id = r.provider_id ) 
-	LEFT JOIN effective_care e ON (h.provider_id = e.provider_id) 
-	GROUP BY h.state;
+-- create procedures table
+CREATE TABLE procedure_scores (provider_id INT, measure_name STRING, measure_id STRING, score_type STRING, score_mean DOUBLE, score_sd DOUBLE);
+
+-- insert data per procedure measure type
+INSERT INTO TABLE procedures_scores (provider_id, measure_name, measure_id, measure_type, score_mean, score_sd ) 
+	SELECT provider_id, measure_name, measure_id, "readmission", avg(score), stddev_pop(score) 
+	FROM readmissions
+	GROUP BY measure_name, measure_id;
+INSERT INTO TABLE procedures_scores (provider_id, measure_name, measure_id, measure_type, score_mean, score_sd ) 
+	SELECT provider_id, measure_name, measure_id, "effective_care", avg(score), stddev_pop(score) 
+	FROM effective_care
+	GROUP BY measure_name, measure_id;
+INSERT INTO TABLE procedures_scores (provider_id, measure_name, measure_id, measure_type, score_mean, score_sd ) 
+	SELECT provider_id, measure_name, measure_id, "surgical_complications", avg(score), stddev_pop(score) 
+	FROM surgical_complications; 
+	GROUP BY measure_name, measure_id;
+INSERT INTO TABLE procedures_scores (provider_id, measure_name, measure_id, measure_type, score_mean, score_sd ) 
+	SELECT provider_id, measure_name, measure_id, "infections", avg(score), stddev_pop(score) 
+	FROM infections;
+	GROUP BY measure_name, measure_id;
+INSERT INTO TABLE procedures_scores (provider_id, measure_name, measure_id, measure_type, score_mean, score_sd ) 
+	SELECT provider_id, measure_name, measure_id, "imaging_efficiency", avg(score), stddev_pop(score) 
+	FROM imaging_efficiency
+	GROUP BY measure_name, measure_id;
