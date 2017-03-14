@@ -187,8 +187,8 @@ STORED AS TEXTFILE
 LOCATION '/user/w205/hospital_compare/measures';
 
 
-DROP TABLE IF EXISTS survey_responses;
-CREATE EXTERNAL TABLE survey_responses (
+DROP TABLE IF EXISTS surveys_responses;
+CREATE EXTERNAL TABLE surveys_responses (
 	provider_id STRING, 
 	hospital_name STRING,
 	address STRING, 
