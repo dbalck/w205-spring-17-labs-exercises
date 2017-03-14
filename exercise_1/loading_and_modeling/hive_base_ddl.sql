@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS hospitals;
+DROP TABLE IF EXISTS hospital_general;
 CREATE EXTERNAL TABLE hospitals (
 	provider_id STRING, 
 	hospital_name STRING, 
@@ -52,6 +52,92 @@ WITH SERDEPROPERTIES (
 STORED AS TEXTFILE
 LOCATION '/user/w205/hospital_compare/readmissions';
 
+
+DROP TABLE IF EXISTS infections;
+CREATE EXTERNAL TABLE infections (
+	provider_id STRING, 
+	hospital_name STRING,
+	address STRING, 
+	city STRING, 
+	state STRING, 
+	zip_code INT, 
+	county_name STRING, 
+	phone_number INT,
+	measure_name STRING,
+	measure_id STRING, 
+	compared_to_national STRING, 
+	denominator STRING, 
+	score STRING, 
+	lower_estimate STRING, 
+	higher_estimate STRING,
+	footnote STRING,
+	measure_start_date STRING,
+	measure_end_date STRING
+	)
+ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.OpenCSVSerde'
+WITH SERDEPROPERTIES (
+	"separatorChar" = ",",
+	"quoteChar" = '"',
+	"escapeChar" = '\\'
+	)
+STORED AS TEXTFILE
+LOCATION '/user/w205/hospital_compare/infections';
+
+DROP TABLE IF EXISTS surgical_complications;
+CREATE EXTERNAL TABLE surgical_complications (
+	provider_id STRING, 
+	hospital_name STRING,
+	address STRING, 
+	city STRING, 
+	state STRING, 
+	zip_code INT, 
+	county_name STRING, 
+	phone_number INT,
+	measure_name STRING,
+	measure_id STRING, 
+	compared_to_national STRING, 
+	denominator STRING, 
+	score STRING, 
+	lower_estimate STRING, 
+	higher_estimate STRING,
+	footnote STRING,
+	measure_start_date STRING,
+	measure_end_date STRING
+	)
+ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.OpenCSVSerde'
+WITH SERDEPROPERTIES (
+	"separatorChar" = ",",
+	"quoteChar" = '"',
+	"escapeChar" = '\\'
+	)
+STORED AS TEXTFILE
+LOCATION '/user/w205/hospital_compare/surgical_complication';
+
+DROP TABLE IF EXISTS imaging_efficiency;
+CREATE EXTERNAL TABLE imaging_efficiency (
+	provider_id STRING, 
+	hospital_name STRING,
+	address STRING, 
+	city STRING, 
+	state STRING, 
+	zip_code INT, 
+	county_name STRING, 
+	phone_number INT,
+	measure_id STRING, 
+	measure_name STRING,
+	score STRING, 
+	footnote STRING,
+	measure_start_date STRING,
+	measure_end_date STRING
+	)
+ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.OpenCSVSerde'
+WITH SERDEPROPERTIES (
+	"separatorChar" = ",",
+	"quoteChar" = '"',
+	"escapeChar" = '\\'
+	)
+STORED AS TEXTFILE
+LOCATION '/user/w205/hospital_compare/imaging_efficiency';
 
 DROP TABLE IF EXISTS effective_care;
 CREATE EXTERNAL TABLE effective_care (
