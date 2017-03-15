@@ -1,0 +1,1 @@
+We detected as slight negative correlation between hospital survey results and mean z-scores. This is expected because negative z-scores imply better health outcomes, while higher scores for patient statisfation are larger postive integers. Specifically, we detected a -.06 correlation. 

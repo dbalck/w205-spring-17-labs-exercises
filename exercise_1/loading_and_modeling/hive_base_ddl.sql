@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS hospital_general;
+DROP TABLE IF EXISTS hospitals;
 CREATE EXTERNAL TABLE hospitals (
 	provider_id STRING, 
 	hospital_name STRING, 
@@ -66,10 +66,7 @@ CREATE EXTERNAL TABLE infections (
 	measure_name STRING,
 	measure_id STRING, 
 	compared_to_national STRING, 
-	denominator STRING, 
 	score STRING, 
-	lower_estimate STRING, 
-	higher_estimate STRING,
 	footnote STRING,
 	measure_start_date STRING,
 	measure_end_date STRING
@@ -111,7 +108,7 @@ WITH SERDEPROPERTIES (
 	"escapeChar" = '\\'
 	)
 STORED AS TEXTFILE
-LOCATION '/user/w205/hospital_compare/surgical_complication';
+LOCATION '/user/w205/hospital_compare/surgical_complications';
 
 DROP TABLE IF EXISTS imaging_efficiency;
 CREATE EXTERNAL TABLE imaging_efficiency (

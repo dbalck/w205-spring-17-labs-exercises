@@ -1,20 +1,8 @@
-CREATE TABLE state_scores
-ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.OpenCSVSerde' 
-WITH SERDEPROPERTIES (
-	"separatorChar" = ",",
-	"quoteChar" = '"',
-	"escapeChar" = '\\'
-)
-AS
-	SELECT	
-		h.state AS state, 
-		COUNT(DISTINCT h.provider_id) as hosp_count,
-		AVG(r.score) AS readmit_score, 
-		COUNT(case when r.provider_id is not null then 1 else NULL end ) AS readmit_count, 
-		AVG(e.score) AS effective_score, 
-		COUNT(case when e.score is not null then 1 else NULL end ) AS effective_count 
+DROP TABLE IF EXISTS state_scores;
+CREATE TABLE state_scores (state STRING, hcahps_base_score_mean DOUBLE, num_hospitals INT, mean_procedure_z_score DOUBLE);
+INSERT INTO TABLE state_scores
+	SELECT	h.state, AVG(s.hcahps_base_score), COUNT(DISTINCT h.provider_id) as hosp_count, AVG(p.hospital_z_score)
 	FROM hospitals h
-	LEFT JOIN survey_responses s ON ( h.provider_id = s.provider_id ) 
-	LEFT JOIN readmissions r ON ( h.provider_id = r.provider_id ) 
-	LEFT JOIN effective_care e ON (h.provider_id = e.provider_id) 
+	LEFT JOIN surveys_scored s ON ( h.provider_id = s.provider_id ) 
+	LEFT JOIN hospitals_scored p ON (h.provider_id = p.provider_id) 
 	GROUP BY h.state;

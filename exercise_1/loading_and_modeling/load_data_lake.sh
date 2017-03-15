@@ -1,6 +1,8 @@
 data_dir=$1
 
+cd $data_dir
 mkdir $data_dir/hospital_data_no_headers/
+chmod 777 $data_dir/hospital_data_no_headers/
 
 # remove headers and move these files into a common directory
 tail -n +2 $data_dir/Hospital\ General\ Information.csv > $data_dir/hospital_data_no_headers/hospitals.csv # hospital info
@@ -13,7 +15,6 @@ tail -n +2 $data_dir/Healthcare\ Associated\ Infections\ -\ Hospital.csv > $data
 tail -n +2 $data_dir/Outpatient\ Imaging\ Efficiency\ -\ Hospital.csv > $data_dir/hospital_data_no_headers/imaging_efficiency.csv # procedures 
 
 # create directories for each file because hive reads from directories
-su - hdfs
 cd $data_dir/hospital_data_no_headers
 hdfs dfs -mkdir -p /user/w205/hospital_compare/hospitals
 hdfs dfs -mkdir -p /user/w205/hospital_compare/measures
@@ -32,5 +33,6 @@ hdfs dfs -put effective_care.csv /user/w205/hospital_compare/effective_care
 hdfs dfs -put readmissions.csv /user/w205/hospital_compare/readmissions
 hdfs dfs -put surgical_complications.csv /user/w205/hospital_compare/surgical_complications
 hdfs dfs -put infections.csv /user/w205/hospital_compare/infections
-hdfs dfs -put imaging_efficiency /user/w205/hospital_compare/imaging_efficiency
+hdfs dfs -put imaging_efficiency.csv /user/w205/hospital_compare/imaging_efficiency
+
 

@@ -1,38 +1,27 @@
-CREATE TABLE hospital_scores (
-	provider_id STRING, 
-	hospital_name STRING,
-	total_num_measures INT, 
-	readmission_delta DOUBLE,
-	readmission_num INT,
-	effective_care_delta DOUBLE, 
-	effective_care_num INT, 
-	surgical_complications_delta DOUBLE,
-	surgical_complications_num INT,
-	infections_delta DOUBLE,   
-	infections_num INT, 
-	imaging_efficiency_delta DOUBLE,
-	imaging_efficiency_num DOUBLE
-);
-	
-ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.OpenCSVSerde' 
-WITH SERDEPROPERTIES (
-	"separatorChar" = ",",
-	"quoteChar" = '"',
-	"escapeChar" = '\\'
-)
-AS
-	select 
-		h.provider_id AS id, 
-		h.hospital_name AS name, 
-		h.state AS state, 
-		AVG(r.score) AS rscore, 
-		COUNT(r.measure_id) AS rcount, 
-		AVG(e.score) AS escore, 
-		COUNT(e.score) AS ecount 
-	from hospitals h 
-	JOIN readmissions r ON ( h.provider_id = r.provider_id ) 
-	JOIN effective_care e ON (e.provider_id = h.provider_id) 
-	GROUP BY h.provider_id, h.hospital_name, h.state 
-	ORDER BY rscore desc
-
-create table hospital_scores
+DROP TABLE hospitals_scored;
+CREATE TABLE hospitals_scored (provider_id STRING, measure_name STRING, measure_id STRING, hospital_score DOUBLE, hospital_z_score DOUBLE, score_mean DOUBLE, score_sd DOUBLE);
+INSERT INTO TABLE hospitals_scored
+	SELECT r.provider_id, r.measure_name, r.measure_id, r.score, (r.score - ps.score_mean) / ps.score_sd, ps.score_mean, ps.score_sd
+	FROM readmissions r
+	LEFT JOIN procedures_scores ps
+	ON r.measure_name =  ps.measure_name AND ps.score_type = 'readmissions';
+INSERT INTO TABLE hospitals_scored
+	SELECT r.provider_id, r.measure_name, r.measure_id, r.score, (r.score - ps.score_mean) / ps.score_sd, ps.score_mean, ps.score_sd
+	FROM effective_care r
+	LEFT JOIN procedures_scores ps
+	ON r.measure_name =  ps.measure_name AND ps.score_type = 'effective_care';
+INSERT INTO TABLE hospitals_scored
+	SELECT r.provider_id, r.measure_name, r.measure_id, r.score, (r.score - ps.score_mean) / ps.score_sd, ps.score_mean, ps.score_sd
+	FROM surgical_complications r
+	LEFT JOIN procedures_scores ps
+	ON r.measure_name =  ps.measure_name AND ps.score_type = 'surgical_complications';
+INSERT INTO TABLE hospitals_scored
+	SELECT r.provider_id, r.measure_name, r.measure_id, r.score, (r.score - ps.score_mean) / ps.score_sd, ps.score_mean, ps.score_sd
+	FROM infections r
+	LEFT JOIN procedures_scores ps
+	ON r.measure_name =  ps.measure_name AND ps.score_type = 'infections';
+INSERT INTO TABLE hospitals_scored
+	SELECT r.provider_id, r.measure_name, r.measure_id, r.score, (r.score - ps.score_mean) / ps.score_sd, ps.score_mean, ps.score_sd
+	FROM imaging_efficiency r
+	LEFT JOIN procedures_scores ps
+	ON r.measure_name =  ps.measure_name AND ps.score_type = 'imaging_efficiency';

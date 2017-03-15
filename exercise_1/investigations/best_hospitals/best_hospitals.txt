@@ -1,0 +1,4 @@
+In order to not compare apples to oranges, procedures and their scores for readmissions, effective care, surgical complications, infections, and imaging efficiency were grouped according to their type, and their mean and standard deviation were taken. With these scores standardized, hospitals can then take the mean of their z-score, which can be compared with other hospitals. Once this work was completed for the hospitals_scored tables, it was a simple matter of simply sorted on their average z-scores. Anything below zero was above average, and the lowest scores corresponded to the best hospitals.
+
+Thus, according to my analysis, the best hospitals are TUSCALOOSA VA MEDICAL CENTER, DOCTORS' CENTER HOSPITAL SAN JUAN, and HOSPITAL DR SUSONI INC. These examples have very low z-scores, and thus may be unusual outliers. 
+
