@@ -22,7 +22,10 @@ class FinalResults():
         cur = self.conn.cursor()
         cur.execute("SELECT * FROM tweetwordcount WHERE word=%(word)s;", {"word": word})
         results = cur.fetchall()
-        for line in results:
+	if (len(results) == 0):
+            print "Total number of occurences of \"{}\": ".format(word) + "0" 
+        else:
+            for line in results:
                 print "Total number of occurences of \"{}\": ".format(word) + str(line[1])
         self.conn.commit()
         

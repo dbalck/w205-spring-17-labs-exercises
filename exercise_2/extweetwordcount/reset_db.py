@@ -13,7 +13,7 @@ try:
     cur.close()
     conn.close()
 except:
-    print "Could not create tcount; it probably already exists"
+    print "Could not create tcount; it likely already exists"
 
 # Connect to the db tcount
 conn = psycopg2.connect(database="tcount", user="postgres", password="pass", host="localhost", port="5432")
@@ -33,7 +33,10 @@ conn.commit()
 # test the db/table 
 cur = conn.cursor()
 cur.execute("SELECT * from pg_class where relname='tweetwordcount';")
-print cur.fetchall()
+results = cur.fetchall()
+if len(results ) > 0:
+    print "We're good to go!"
+    print "In the 'tcount' database we have the table 'tweetwordcount' with {} rows".format(results[0][10])
 conn.commit()
 
 
