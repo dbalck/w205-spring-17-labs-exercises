@@ -31,7 +31,7 @@ insert into tweetwordcount (word, count)
         #self.emit([word, self.counts[word]])
 
         # Log the count - just to see the topology running
-        # self.log('%s: %d' % (word, self.counts[word]))
+        self.log('%s: %d' % (word, self.counts[word]))
 	self.cur.execute(self.exec_str, {"word": word, "count": self.counts[word]})
 	self.conn.commit()
 
