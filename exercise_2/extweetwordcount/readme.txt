@@ -16,8 +16,8 @@ e.g. "python init_db.py"
 5. execute the stream parse inside the project folder. Since there is only a single topology, it should default to the extweetwordcount.clj topology. You may be prompted to hit <ENTER> if running as root, because the LEIN_ROOT is not set. This is normal. 
 e.g. "sparse run"
 
-6. final_results.py and histogram.py can be found in the extweetwordcount folder and executed at will.
-e.g. python final_results.py hello
+6. finalresults.py and histogram.py can be found in the extweetwordcount folder and executed at will.
+e.g. python finalresults.py hello
 e.g. python histogram.py 10,15
 
 
